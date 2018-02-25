@@ -1,9 +1,11 @@
 const createEnumerableProperty = function(property) {
     return property;
 };
+
 const createNotEnumerableProperty = function(property) {
     return Symbol.for(property);
 };
+
 const createProtoMagicObject = function() {
     var f = function() { };
     var o = {};
@@ -11,30 +13,28 @@ const createProtoMagicObject = function() {
     f.prototype = o;
     return f;
 };
+
 const incrementor = function() {
-    if (!Function.prototype.value) Function.prototype.value = 0;
+    if (!Function.prototype._value) Function.prototype._value = 0;
     if (!incrementor.hasOwnProperty('toString')) {
         incrementor.toString = function () {
-            return Function.prototype.value;
+            return Function.prototype._value;
         }
     }
-    Function.prototype.value++;
+    Function.prototype._value++;
     return incrementor;
 };
+
+let value = 0;
 const asyncIncrementor = function() {
     return new Promise(function(resolved, rejected) {
-        if (!Function.prototype.valueOne) Function.prototype.valueOne = 0;
-        if (!asyncIncrementor.hasOwnProperty('toString')) {
-            asyncIncrementor.toString = function () {
-                return Function.prototype.valueOne;
-            }
-        }
-        Function.prototype.valueOne++;
+        value++;
         resolved();
     }).then(function() {
-        return Function.prototype.valueOne;
+        return value;
     });
-}
+};
+
 const createIncrementer = function() {
     var o = {
         value: 0,
@@ -55,9 +55,8 @@ const createIncrementer = function() {
         return this;
     };
     return o;
-}
+};
 
-// return same argument not earlier than in one second, and not later, than in two
 const returnBackInSecond = function (property) {
     return new Promise(function(fulfilled) {
         setTimeout(function () {
@@ -89,7 +88,7 @@ const createSerializedObject = function() {
             return '';
         }
     }
-}
+};
 
 const sortByProto = function(arr) {
     for (var i = 0; i < arr.length; i++) {
